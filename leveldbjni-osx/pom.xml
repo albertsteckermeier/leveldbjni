@@ -34,29 +34,29 @@
 
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.fusesource.leveldbjni</groupId>
+    <groupId>eu.cqse.leveldbjni</groupId>
     <artifactId>leveldbjni-project</artifactId>
-    <version>99-master-SNAPSHOT</version>
+    <version>1.9</version>
   </parent>
 
-  <groupId>org.fusesource.leveldbjni</groupId>
+  <groupId>eu.cqse.leveldbjni</groupId>
   <artifactId>leveldbjni-osx</artifactId>
-  <version>99-master-SNAPSHOT</version>
+  <version>1.9</version>
   
   <name>${project.artifactId}</name>
   <description>The leveldbjni OS X universal native libraries</description>
 
   <dependencies>
     <dependency>
-      <groupId>org.fusesource.leveldbjni</groupId>
+      <groupId>eu.cqse.leveldbjni</groupId>
       <artifactId>leveldbjni</artifactId>
-      <version>99-master-SNAPSHOT</version>
+      <version>1.9</version>
     </dependency>
 
     <dependency>
-      <groupId>org.fusesource.leveldbjni</groupId>
+      <groupId>eu.cqse.leveldbjni</groupId>
       <artifactId>leveldbjni</artifactId>
-      <version>99-master-SNAPSHOT</version>
+      <version>1.9</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
@@ -90,7 +90,7 @@
           <name>leveldbjni</name>
           <classified>false</classified>
           <nativeSrcDependency>
-            <groupId>org.fusesource.leveldbjni</groupId>
+            <groupId>eu.cqse.leveldbjni</groupId>
             <artifactId>leveldbjni</artifactId>
             <version>${project.version}</version>
             <classifier>native-src</classifier>

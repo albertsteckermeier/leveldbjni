@@ -39,9 +39,9 @@
     <version>1.9</version>
   </parent>
 
-  <groupId>org.fusesource.leveldbjni</groupId>
+  <groupId>eu.cqse.leveldbjni</groupId>
   <artifactId>leveldbjni-project</artifactId>
-  <version>99-master-SNAPSHOT</version>
+  <version>1.9</version>
   <packaging>pom</packaging>
   
   <name>${project.artifactId}</name>
@@ -136,8 +136,8 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
       
@@ -214,7 +214,6 @@
   </reporting>
 
   <profiles>
-    
     <profile>
       <id>download</id>
       <repositories>
@@ -244,25 +243,19 @@
       <id>full</id>
       <modules>
         <module>leveldbjni-osx</module>
-        <module>leveldbjni-linux32</module>
         <module>leveldbjni-linux64</module>
-        <module>leveldbjni-freebsd64</module>
-        <module>leveldbjni-win32</module>
         <module>leveldbjni-win64</module>
-        <module>leveldbjni-sunos64-amd64</module>
-        <module>leveldbjni-sunos64-sparcv9</module>
-        <module>leveldbjni-linux64-ppc64le</module>
-        <module>leveldbjni-linux64-aarch64</module>
         <module>leveldbjni-all</module>
       </modules>
-    </profile>    
+    </profile>
 
     <profile>
       <id>all</id>
       <modules>
         <module>leveldbjni-all</module>
       </modules>
-    </profile>    
+    </profile>
+
     <profile>
       <id>osx</id>
       <modules>
@@ -271,33 +264,9 @@
     </profile>
 
     <profile>
-      <id>linux32</id>
-      <modules>
-        <module>leveldbjni-linux32</module>
-      </modules>
-    </profile>
-
-    <profile>
       <id>linux64</id>
       <modules>
         <module>leveldbjni-linux64</module>
-      </modules>
-    </profile>
-
-    <profile>
-      <id>freebsd64</id>
-      <modules>
-        <module>leveldbjni-freebsd64</module>
-      </modules>
-    </profile>
-
-    <profile>
-      <id>win32</id>
-      <properties>
-        <skipAutogen>true</skipAutogen>
-      </properties>
-      <modules>
-        <module>leveldbjni-win32</module>
       </modules>
     </profile>
 
@@ -310,34 +279,5 @@
         <module>leveldbjni-win64</module>
       </modules>
     </profile>
-
-    <profile>
-      <id>sunos64-amd64</id>
-      <modules>
-        <module>leveldbjni-sunos64-amd64</module>
-      </modules>
-    </profile>
-
-    <profile>
-      <id>sunos64-sparcv9</id>
-      <modules>
-        <module>leveldbjni-sunos64-sparcv9</module>
-      </modules>
-    </profile>
-
-    <profile>
-      <id>linux64-ppc64le</id>
-      <modules>
-        <module>leveldbjni-linux64-ppc64le</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>linux64-aarch64</id>
-      <modules>
-        <module>leveldbjni-linux64-aarch64</module>
-      </modules>
-    </profile>
-
-
   </profiles>
 </project>

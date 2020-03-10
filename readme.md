@@ -18,9 +18,9 @@ You just need to add the following dependency to your Maven POM:
 
     <dependencies>
       <dependency>
-        <groupId>org.fusesource.leveldbjni</groupId>
+        <groupId>eu.cqse.leveldbjni</groupId>
         <artifactId>leveldbjni-all</artifactId>
-        <version>1.8</version>
+        <version>1.9</version>
       </dependency>
     </dependencies>
 
@@ -30,18 +30,18 @@ If you want to use only one or some but not all native drivers, then directly us
 
     <dependencies>
       <dependency>
-        <groupId>org.fusesource.leveldbjni</groupId>
+        <groupId>eu.cqse.leveldbjni</groupId>
         <artifactId>leveldbjni-linux64</artifactId>
-        <version>1.8</version>
+        <version>1.9</version>
       </dependency>
     </dependencies>
 
 If you have the leveljni native driver DLL/SO library already separately installed e.g. by a package manager (see [issue 90](https://github.com/fusesource/leveldbjni/issues/90)), then you could depend on the Java "launcher" without the JAR containing the OS specific native driver like this:
 
       <dependency>
-        <groupId>org.fusesource.leveldbjni</groupId>
+        <groupId>eu.cqse.leveldbjni</groupId>
         <artifactId>leveldbjni</artifactId>
-        <version>1.8</version>
+        <version>1.9</version>
       </dependency>
 
 Lastly, another project unrelated to this project separately provides a (less mature) pure Java implementation of LevelDB, see [dain/leveldb](https://github.com/dain/leveldb).  Note that both that and this project share the same Maven artefact for the Level DB API interface (org.iq80.leveldb:leveldb-api).
