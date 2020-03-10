@@ -36,6 +36,8 @@ AC_DEFUN([CUSTOM_M4_SETUP],
 
   AC_CHECK_HEADER([pthread.h],[AC_DEFINE([HAVE_PTHREAD_H], [1], [Define to 1 if you have the <pthread.h> header file.])])
 
+  CXXFLAGS="$CXXFLAGS -std=c++11"
+
   AC_ARG_WITH([leveldb],
   [AS_HELP_STRING([--with-leveldb@<:@=PATH@:>@],
     [Directory where leveldb was built. Example: --with-leveldb=/opt/leveldb])],
