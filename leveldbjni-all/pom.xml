@@ -91,7 +91,7 @@
             <Bundle-Name>${project.artifactId}</Bundle-Name>
             <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
             <Export-Package>
-              eu.cqse.leveldbjni;version=${project.version},
+              org.fusesource.leveldbjni;version=${project.version},
               org.iq80.leveldb*;version=${leveldb-api-version},</Export-Package>
             <Import-Package></Import-Package>
             <DynamicImport-Package></DynamicImport-Package>
