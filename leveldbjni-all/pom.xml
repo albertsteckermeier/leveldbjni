@@ -91,7 +91,7 @@
             <Bundle-Name>${project.artifactId}</Bundle-Name>
             <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
             <Export-Package>
-              org.fusesource.leveldbjni;version=${project.version},
+              eu.cqse.leveldbjni;version=${project.version},
               org.iq80.leveldb*;version=${leveldb-api-version},</Export-Package>
             <Import-Package></Import-Package>
             <DynamicImport-Package></DynamicImport-Package>
@@ -99,14 +99,14 @@
             <Implementation-Title>LevelDB JNI</Implementation-Title>
             <Implementation-Version>${project.version}</Implementation-Version>
             <Embed-Dependency>
-              *;groupId=org.fusesource.leveldbjni;inline=META-INF/native/*,
+              *;groupId=eu.cqse.leveldbjni;inline=META-INF/native/*,
             </Embed-Dependency>
             <Embed-Transitive>true</Embed-Transitive>
             <Bundle-NativeCode>
               META-INF/native/windows64/leveldbjni.dll;osname=Win32;processor=x86-64,
               META-INF/native/osx/libleveldbjni.jnilib;osname=macosx;processor=x86,
               META-INF/native/osx/libleveldbjni.jnilib;osname=macosx;processor=x86-64,
-              META-INF/native/linux64/libleveldbjni.so;osname=Linux;processor=x86-64,
+              META-INF/native/linux64/libleveldbjni.so;osname=Linux;processor=x86-64
             </Bundle-NativeCode>
          </instructions>
         </configuration>
