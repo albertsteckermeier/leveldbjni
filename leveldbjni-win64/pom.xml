@@ -55,42 +55,43 @@
   </dependencies>
 
   <build>
-    <testSourceDirectory>${basedir}/../leveldbjni/src/test/java</testSourceDirectory>
-     
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.3.1</version>
-        <configuration>
-          <classesDirectory>${basedir}/target/generated-sources/hawtjni/lib</classesDirectory>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.fusesource.hawtjni</groupId>
-        <artifactId>maven-hawtjni-plugin</artifactId>
-        <version>${hawtjni-version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>build</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <name>leveldbjni</name>
-          <classified>false</classified>
-          <nativeSrcDependency>
-            <groupId>eu.cqse.leveldbjni</groupId>
-            <artifactId>leveldbjni</artifactId>
-            <version>${project.version}</version>
-            <classifier>native-src</classifier>
-            <type>zip</type>
-          </nativeSrcDependency>
-          <packageDirectory>${basedir}/../leveldbjni/target/generated-sources/hawtjni/native-package</packageDirectory>
-        </configuration>
-      </plugin>
-    </plugins>
+<!--    This vcbuild based build is currently not working. Probably needs to be upgraded to a more modern Visual Studio 2019 build.-->
+<!--    <testSourceDirectory>${basedir}/../leveldbjni/src/test/java</testSourceDirectory>-->
+<!--     -->
+<!--    <plugins>-->
+<!--      <plugin>-->
+<!--        <groupId>org.apache.maven.plugins</groupId>-->
+<!--        <artifactId>maven-jar-plugin</artifactId>-->
+<!--        <version>2.3.1</version>-->
+<!--        <configuration>-->
+<!--          <classesDirectory>${basedir}/target/generated-sources/hawtjni/lib</classesDirectory>-->
+<!--        </configuration>-->
+<!--      </plugin>-->
+<!--      <plugin>-->
+<!--        <groupId>org.fusesource.hawtjni</groupId>-->
+<!--        <artifactId>maven-hawtjni-plugin</artifactId>-->
+<!--        <version>${hawtjni-version}</version>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <goals>-->
+<!--              <goal>build</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--        <configuration>-->
+<!--          <name>leveldbjni</name>-->
+<!--          <classified>false</classified>-->
+<!--          <nativeSrcDependency>-->
+<!--            <groupId>eu.cqse.leveldbjni</groupId>-->
+<!--            <artifactId>leveldbjni</artifactId>-->
+<!--            <version>${project.version}</version>-->
+<!--            <classifier>native-src</classifier>-->
+<!--            <type>zip</type>-->
+<!--          </nativeSrcDependency>-->
+<!--          <packageDirectory>${basedir}/../leveldbjni/target/generated-sources/hawtjni/native-package</packageDirectory>-->
+<!--        </configuration>-->
+<!--      </plugin>-->
+<!--    </plugins>-->
   </build>
 
 </project>

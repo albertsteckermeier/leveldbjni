@@ -194,77 +194,140 @@ Using a memory pool to make native memory allocations more efficient:
 
 See also [releasing.md](releasing.md):
 
-### Prerequisites 
+Building all the relevant Jars of this Maven project requires multiple steps being performed across different operation systems. The general process is as follows.
 
-* GNU compiler toolchain
-* [Maven 3](http://maven.apache.org/download.html)
+1. Build and install main Jars as well as Java JNI C sources on Linux. This also already builds the Linux binary Jar.
+2. Zip and move repo as well as artifacts from local Maven to Windows machine and build only the Windows binaries there.
+3. Zip and move repo as well as artifacts from local Maven on the Windows machine to a macOS machine and build the macOS binaries there.
+4. Build the uber Jar containing all binaries as well as Java class needed to use the LevelDB JNI across Linux, Windows and macOS.
 
-### Supported Platforms
+### General
 
-The following worked for me on:
+In order to make the somewhat outdated build work there exist some forks of the required repositories. Please checkout all three. For the current build the `_leveldbjni` branches have been used.
 
- * OS X Lion with X Code 4
- * CentOS 5.6 (32 and 64 bit)
- * Ubuntu 12.04 (32 and 64 bit)
- * apt-get install autoconf libtool
-
-### Build Procedure
-
-Then download the snappy, leveldb, and leveldbjni project source code:
-
-    wget http://snappy.googlecode.com/files/snappy-1.0.5.tar.gz
-    tar -zxvf snappy-1.0.5.tar.gz
-    git clone git://github.com/chirino/leveldb.git
-    git clone git://github.com/fusesource/leveldbjni.git
-    export SNAPPY_HOME=`cd snappy-1.0.5; pwd`
-    export LEVELDB_HOME=`cd leveldb; pwd`
-    export LEVELDBJNI_HOME=`cd leveldbjni; pwd`
-
-<!-- In cygwin that would be
-    export SNAPPY_HOME=$(cygpath -w `cd snappy-1.0.5; pwd`)
-    export LEVELDB_HOME=$(cygpath -w `cd leveldb; pwd`)
-    export LEVELDBJNI_HOME=$(cygpath -w `cd leveldbjni; pwd`)
--->
-
-Compile the snappy project.  This produces a static library.
-
-    cd ${SNAPPY_HOME}
-    ./configure --disable-shared --with-pic
-    make
+* [Snappy](https://github.com/albertsteckermeier/snappy)
+    * At the time of writing Snappy 1.1.8 was used
+    * Apply [this fix commit](https://github.com/albertsteckermeier/snappy/commit/0c5e3b2d82650bfd1eeabd6afb98d2d8a30226ba) as well to make the LevelDB JNI build work
+* [LevelDB](https://github.com/albertsteckermeier/leveldb)
+    * At the time of writing LevelDB 1.22 was used
+    * Apply [this fix commit](https://github.com/albertsteckermeier/leveldb/commit/ac1b5a869eca43df7f3277e8b5118d14ed54b9af) as well to make the LevelDB JNI build work
+* [LevelDB JNI](https://github.com/albertsteckermeier/leveldbjni) 
+    * Latest master contains some modifications to make the builds work
     
-Patch and Compile the leveldb project.  This produces a static library. 
-    
-    cd ${LEVELDB_HOME}
-    export LIBRARY_PATH=${SNAPPY_HOME}
-    export C_INCLUDE_PATH=${LIBRARY_PATH}
-    export CPLUS_INCLUDE_PATH=${LIBRARY_PATH}
-    git apply ../leveldbjni/leveldb.patch
-    make libleveldb.a
+Also **make sure to update the version numbers** in all the Maven POM XML files to avoid Jar clashes before starting to build a new version.
 
-Now use maven to build the leveldbjni project. 
-    
-    cd ${LEVELDBJNI_HOME}
-    mvn clean install -P download -P ${platform}
+### Linux
 
-Replace ${platform} with one of the following platform identifiers (depending on the platform your building on):
+#### Prerequisites
 
-* osx
-* linux32
-* linux64
-* win32
-* win64
-* freebsd64
+* Maven 3
+* GNU Autoconf
+* GNU Libtool
+* CMake
 
-If your platform does not have the right auto-tools levels available
-just copy the `leveldbjni-${version}-SNAPSHOT-native-src.zip` artifact
-from a platform the does have the tools available then add the
-following argument to your maven build:
+#### Build
 
-    -Dnative-src-url=file:leveldbjni-${verision}-SNAPSHOT-native-src.zip
+1. Clone all the repositories locally.
+1. Checkout the `_leveldbjni` branches or apply the fixes to a newer version.
+1. Build Snappy
+    1. `cd` to the Snappy repository directory
+    1. Build with: `cmake . && make`
+    1. Export environment variable for LevelDB JNI build: `export SNAPPY_HOME=$(pwd)`
+1. Build LevelDB
+    1. `cd` to the LevelDB repository directory
+    1. Build with: `cmake -DCMAKE_BUILD_TYPE=Release . && cmake --build .`
+    1. Export environment variable for LevelDB JNI build: `export LEVELDB_HOME=$(pwd)`
+1. Build LevelDB JNI
+    1. `cd` to the LevelDB JNI repository directory
+    1. Build with: `mvn clean install -P download -P linux64`
+1. After this process you should locally have Jars for `leveldbjni`, `leveldbjni-linux64` and `leveldbjni-project` in your local Maven repository at `~/.m2/eu/cqse/leveldbjni`.
+1. Zip the LevelDB JNI repository as well as the local Maven repository contents at `~/.m2/eu/cqse/leveldbjni` and move both to your Windows machine.
 
-### Build Results
+### Windows
 
-* `leveldbjni/target/leveldbjni-${version}.jar` : The java class file to the library.
-* `leveldbjni/target/leveldbjni-${version}-native-src.zip` : A GNU style source project which you can use to build the native library on other systems.
-* `leveldbjni-${platform}/target/leveldbjni-${platform}-${version}.jar` : A jar file containing the built native library using your currently platform.
-    
+#### Prerequisites
+
+* Maven 3
+* Git Bash
+* CMake
+* Visual Studio 2019
+
+#### Build
+
+1. Clone the Snappy and LevelDB repositories locally.
+1. Checkout the `_leveldbjni` branches or apply the fixes to a newer version.
+1. Build Snappy
+    1. Set system environment variable `SNAPPY_HOME` to the repository directory
+    1. `cd` to the Snappy repository directory
+    1. Create Visual Studio 2019 solution: `cmake -G "Visual Studio 16 2019" -A x64 .`
+    1. Open `Snappy.sln` in Visual Studio
+    1. Select solution configuration `Release` and solution platform to `x64`
+    1. Right click the `snappy` solution and set _Properties > C/C++ > Code Generation > Runtime_ Library to `Multi-threaded (/MT)` instead of `Multi-threaded DLL (/MT)`
+    1. Right click the `snappy` solution and build/rebuild it.
+    1. You should now have a Snappy Lib file in the `Release` folder
+1. Build LevelDB
+    1. Set system environment variable `LEVELDB_HOME` to the repository directory
+    1. `cd` to the LevelDB repository directory
+    1. Create Visual Studio 2019 solution: `cmake -G "Visual Studio 16 2019" -A x64 .`
+    1. Open `leveldb.sln` in Visual Studio
+    1. Select solution configuration `Release` and solution platform to `x64`
+    1. Right click the `leveldb` solution and set _Properties > C/C++ > Code Generation > Runtime_ Library to `Multi-threaded (/MT)` instead of `Multi-threaded DLL (/MT)`
+    1. Right click the `leveldb` solution and build/rebuild it.
+    1. You should now have a LevelDB Lib file in the `Release` folder
+1. Build only LevelDB JNI binary for Windows
+    1. Extract the copied LevelDB JNI repository.
+    1. Extract the Maven repository contents to the corresponding Windows local Maven repository at `C:\Users\<Username>\.m2\eu\cqse\leveldbjni`
+    1. `cd` to the extracted LevelDB JNI repository directory
+    1. Build only the Windows Jar with: `cd leveldbjni-win64 && mvn clean install`
+    1. You should have a folder `target/generated-sources/hawtjni/native-package` which contains a `vs2010.vcxproj` file.
+    1. Open the `vs2010.vcxproj` in Visual Studio 2019 and Upgrade to the latest SDK.
+    1. Make sure to have your `JAVA_HOME` environment variable set
+    1. Select solution configuration `Release` and solution platform to `x64`
+    1. Right click the `leveldb` solution and set _Properties > C/C++ > Code Generation > Runtime_ Library to `Multi-threaded (/MT)` instead of `Multi-threaded DLL (/MT)`
+    1. Right click the `leveldbjni` solution and build/rebuild it.
+    1. You should now have a LevelDB JNI DLL in the `Release` folder
+    1. Put that DLL into the Jar `leveldbjni-win64/target/leveldbjni-win64-<Version>.jar` in subfolder `META_INF/native/windows64` within the Jar file.
+    1. Override the locally installed copy in the local Maven repository at `C:\Users\<Username>\.m2\eu\cqse\leveldbjni\leveldbjni-win64` with the Jar file containing the DLL-
+1. Zip the LevelDB JNI repository as well as the local Maven repository contents at `C:\Users\<Username>\.m2\eu\cqse\leveldbjni` and move both to your macOS machine.
+
+### macOS
+
+These steps have been performed on macOS Catalina. You may have to add to the `OSX_VERSIONS` for newer versions of macOS if they include newer SDKs.
+
+#### Prerequisites
+
+* Maven 3
+* GNU Autoconf
+* GNU Libtool
+* CMake
+
+#### Build
+
+1. Clone the Snappy and LevelDB repositories locally.
+1. Checkout the `_leveldbjni` branches or apply the fixes to a newer version.
+1. Build Snappy
+    1. `cd` to the Snappy repository directory
+    1. Build with: `cmake . && make`
+    1. Export environment variable for LevelDB JNI build: `export SNAPPY_HOME=$(pwd)`
+1. Build LevelDB
+    1. `cd` to the LevelDB repository directory
+    1. Build with: `cmake -DCMAKE_BUILD_TYPE=Release . && cmake --build .`
+    1. Export environment variable for LevelDB JNI build: `export LEVELDB_HOME=$(pwd)`
+1. Build only LevelDB JNI binray for macOS
+    1. Extract the copied LevelDB JNI repository.
+    1. Extract the Maven repository contents to the corresponding Windows local Maven repository at `~/.m2/eu/cqse/leveldbjni`
+    1. `cd` to the LevelDB JNI repository directory
+    1. Build with: `cd leveldbjni-osx && mvn clean install`
+1. After this process you should locally have Jars for `leveldbjni`, `leveldbjni-linux64`, `leveldbjni-win64`, `leveldbjni-osx` and `leveldbjni-project` in your local Maven repository at `~/.m2/eu/cqse/leveldbjni`.
+
+### Final steps
+
+These steps can be performed on any OS.
+
+1. Make sure to move all the Jars for `leveldbjni`, `leveldbjni-linux64`, `leveldbjni-win64`, `leveldbjni-osx` and `leveldbjni-project` in your local Maven repository.
+1. Make sure to use the LevelDB JNI repository that contains all the Jars. In our example build steps outlined above this would be the repository present on macOS.
+1. Build the uber Jar containing everything
+    1. `cd` to the LevelDB JNI repository
+    1. Build the uber Jar: `cd leveldbjni-all && mvn clean install -P release`
+1. You should now have all Jars for Jars for `leveldbjni`, `leveldbjni-linux64`, `leveldbjni-win64`, `leveldbjni-osx`, `leveldbjni-all` and `leveldbjni-project` in your local Maven repository
+1. Publish the contents of your local repository at `~/.m2/eu/cqse/leveldbjni` to the artifacts SVN.
